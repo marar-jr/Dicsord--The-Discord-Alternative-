@@ -468,11 +468,16 @@ app.get('/health', (req, res) => {
 process.on('SIGTERM', async () => {
     console.log('SIGTERM received, shutting down gracefully...');
     server.close(() => {
-        mongoose.connection.close(false, () => {
-            console.log('Server closed');
-            process.exit(0);
-        });
+mongoose.connection.close(false)
+    .then(() => {
+        console.log('Server closed');
+        process.exit(0);
+    })
+    .catch(err => {
+        console.error('Error closing MongoDB:', err);
+        process.exit(1);
     });
+            });
 });
 
 module.exports = { app, server };

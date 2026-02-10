@@ -465,13 +465,9 @@ rtcWss.on('connection', (ws) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-    res.json({ 
-        status: 'ok', 
-        mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-        uptime: process.uptime()
-    });
+    res.writeHead(200, {'Content-Type': 'text/plain', 'Connection': 'close'});
+    res.end('OK');
 });
-
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {

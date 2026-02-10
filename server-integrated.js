@@ -27,6 +27,10 @@ app.use(cors());
 // Serve static files
 app.use(express.static(__dirname));
 app.use(express.json());
+// Health check for Railway
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
 // Serve login page at root
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/dicsord-login.html');

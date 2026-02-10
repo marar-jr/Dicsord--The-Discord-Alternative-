@@ -24,8 +24,13 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/opench
 
 // Middleware
 app.use(cors());
+// Serve static files
+app.use(express.static(__dirname));
 app.use(express.json());
-app.use(express.static('public'));
+// Serve login page at root
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/dicsord-login.html');
+});
 
 // Rate limiting
 const limiter = rateLimit({

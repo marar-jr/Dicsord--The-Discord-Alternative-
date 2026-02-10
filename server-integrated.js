@@ -103,7 +103,7 @@ server.listen(PORT, '0.0.0.0', () => {
     });
 }).catch(err => {
     console.error('✗ MongoDB connection error:', err);
-    process.exit(1);
+    
 });
 // Authentication middleware
 const authenticateToken = (req, res, next) => {

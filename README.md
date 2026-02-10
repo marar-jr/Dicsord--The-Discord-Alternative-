@@ -1,111 +1,147 @@
-# OpenChat - Privacy-Focused Discord Alternative
+# Dicsord
 
-A real-time chat application with voice channels, built as a privacy-focused alternative to Discord. No invasive ID verification required.
+> **A privacy-focused Discord alternative. No ID verification required.**
 
-## Features
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Node](https://img.shields.io/badge/node-18%2B-green.svg)
+![MongoDB](https://img.shields.io/badge/mongodb-7%2B-green.svg)
 
-✅ **Real-time Messaging** - WebSocket-based instant messaging
-✅ **Voice Channels** - WebRTC peer-to-peer voice communication
-✅ **Server Organization** - Multiple servers with text and voice channels
-✅ **User Authentication** - JWT-based auth without invasive verification
-✅ **Member Management** - See who's online with status indicators
-✅ **Rate Limiting** - Built-in protection against spam
-✅ **Privacy First** - No ID verification, minimal data collection
-✅ **Self-Hostable** - Run on your own infrastructure
-✅ **Docker Support** - Easy deployment with Docker Compose
+**A Foveated Production ⚡**
 
-## Technology Stack
+---
 
-**Backend:**
-- Node.js + Express
-- WebSocket (ws library)
-- WebRTC for voice/video
-- MongoDB for data storage
-- JWT for authentication
-- bcrypt for password hashing
+## 🎯 Why Dicsord?
 
-**Frontend:**
-- Vanilla JavaScript (can be adapted to React/Vue)
-- WebSocket client
-- WebRTC API
-- Responsive CSS
+Discord now requires government ID verification for certain features. **Dicsord** is a privacy-respecting alternative that gives you full functionality without invasive verification.
 
-## Prerequisites
+### ✨ Features
 
-- Node.js 18+ 
-- MongoDB 5+
-- Modern web browser with WebRTC support
+- 🔒 **No ID Verification** - Ever
+- 📱 **No Phone Number Required**
+- 🏠 **Self-Hostable** - Own your data
+- 🎙️ **Voice Chat** - WebRTC peer-to-peer
+- 💬 **Real-time Messaging** - WebSocket powered
+- 👥 **Servers & Channels** - Familiar Discord-like structure
+- 🔓 **100% Open Source** - Audit the code yourself
+- 🐳 **Docker Ready** - One command deployment
 
-## Quick Start
+---
 
-### 1. Install Dependencies
+## 🚀 Quick Start
+
+### Option 1: Try It Live (Coming Soon)
+
+Visit: **[dicsord-demo.railway.app](#)** (Deployment in progress)
+
+### Option 2: Run Locally
+
+#### Prerequisites
+
+- [Node.js 18+](https://nodejs.org/)
+- [MongoDB 7+](https://www.mongodb.com/try/download/community)
+
+#### Installation
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/marar-jr/Dicsord--The-Discord-Alternative-.git
+cd Dicsord--The-Discord-Alternative-
+
+# 2. Install dependencies
 npm install
-```
 
-### 2. Setup MongoDB
-
-**Option A: Local MongoDB**
-```bash
-# macOS
-brew install mongodb-community
-brew services start mongodb-community
-
-# Ubuntu/Debian
-sudo apt-get install mongodb
-sudo systemctl start mongodb
-```
-
-**Option B: MongoDB Docker**
-```bash
-docker run -d -p 27017:27017 --name openchat-mongo mongo:7
-```
-
-### 3. Configure Environment
-
-```bash
+# 3. Configure environment
 cp .env.example .env
-# Edit .env with your configuration
-nano .env
+# Edit .env and change JWT_SECRET to a random string
+
+# 4. Start MongoDB
+# Windows:
+mongod --dbpath=C:\data\db
+
+# Mac/Linux:
+mongod
+
+# 5. Start the server (in a new terminal)
+node server-integrated.js
+
+# 6. Open the app
+# Open dicsord-login.html in your browser
 ```
 
-**Important:** Change the `JWT_SECRET` in production!
+### Option 3: Docker (Easiest!)
 
-### 4. Start the Server
-
-**Development:**
 ```bash
-npm run dev
+# 1. Clone the repository
+git clone https://github.com/marar-jr/Dicsord--The-Discord-Alternative-.git
+cd Dicsord--The-Discord-Alternative-
+
+# 2. Start everything with Docker
+docker-compose up -d
+
+# 3. Access the app
+# Open http://localhost:3000 in your browser
 ```
 
-**Production:**
-```bash
-npm start
+---
+
+## 📖 How to Use
+
+1. **Register** - Create an account (no email verification!)
+2. **Create a Server** - Start your own community
+3. **Add Channels** - Text and voice channels
+4. **Invite Friends** - Share your server
+5. **Chat & Voice** - Enjoy privacy-focused communication
+
+---
+
+## 🛠️ Tech Stack
+
+- **Backend**: Node.js, Express, WebSocket
+- **Database**: MongoDB
+- **Authentication**: JWT
+- **Voice**: WebRTC (peer-to-peer)
+- **Frontend**: Vanilla JavaScript, HTML5, CSS3
+
+---
+
+## 🔧 Configuration
+
+Edit `.env` to customize:
+
+```env
+# Server
+PORT=3000
+NODE_ENV=development
+
+# Security
+JWT_SECRET=your-super-secret-key-here
+
+# Database
+MONGODB_URI=mongodb://localhost:27017/dicsord
+
+# CORS
+CORS_ORIGIN=http://localhost:3000
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# WebRTC
+STUN_SERVER=stun:stun.l.google.com:19302
 ```
 
-The server will start on `http://localhost:3000`
+---
 
-### 5. Open the Frontend
+## 🐳 Docker Deployment
 
-Open `discord-alternative.html` in your web browser, or serve it with:
+The included `docker-compose.yml` sets up everything:
 
-```bash
-# Using Python
-python3 -m http.server 8000
-
-# Using Node.js
-npx http-server -p 8000
-```
-
-Then navigate to `http://localhost:8000/discord-alternative.html`
-
-## Docker Deployment
-
-### Using Docker Compose (Recommended)
+- MongoDB database
+- Node.js backend server
+- Nginx reverse proxy (optional)
 
 ```bash
-# Build and start all services
+# Start services
 docker-compose up -d
 
 # View logs
@@ -115,196 +151,139 @@ docker-compose logs -f
 docker-compose down
 ```
 
-This will start:
-- MongoDB database
-- OpenChat backend server
-- Nginx reverse proxy (optional)
+---
 
-### Manual Docker Build
+## 🌐 Deployment Options
+
+### Railway (Recommended)
+
+1. Fork this repository
+2. Go to [Railway.app](https://railway.app)
+3. Click "New Project" → "Deploy from GitHub repo"
+4. Select your fork
+5. Add MongoDB service
+6. Set environment variables
+7. Deploy!
+
+### Render.com
+
+1. Fork this repository
+2. Go to [Render.com](https://render.com)
+3. Create new "Web Service"
+4. Connect your GitHub repo
+5. Add MongoDB database
+6. Set environment variables
+7. Deploy!
+
+### VPS (DigitalOcean, Linode, etc.)
 
 ```bash
-# Build image
-docker build -t openchat .
-
-# Run container
-docker run -p 3000:3000 \
-  -e MONGODB_URI=mongodb://host.docker.internal:27017/openchat \
-  -e JWT_SECRET=your-secret \
-  openchat
+# On your VPS
+git clone https://github.com/YOUR_USERNAME/Dicsord--The-Discord-Alternative-.git
+cd Dicsord--The-Discord-Alternative-
+npm install
+cp .env.example .env
+# Edit .env with production values
+pm2 start server-integrated.js --name dicsord
+pm2 save
+pm2 startup
 ```
 
-## API Endpoints
+---
+
+## 📊 API Endpoints
 
 ### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
+- `POST /api/auth/register` - Create account
+- `POST /api/auth/login` - Login
 
 ### Servers
-- `GET /api/servers` - Get user's servers
-- `POST /api/servers` - Create new server
-- `GET /api/servers/:serverId/channels` - Get server channels
-- `GET /api/servers/:serverId/members` - Get server members
+- `GET /api/servers` - List user's servers
+- `POST /api/servers` - Create server
+- `GET /api/servers/:id` - Get server details
+
+### Channels
+- `GET /api/servers/:serverId/channels` - List channels
+- `POST /api/channels` - Create channel
 
 ### Messages
-- `GET /api/channels/:channelId/messages` - Get channel messages
+- `GET /api/channels/:channelId/messages` - Get messages (paginated)
+- WebSocket: Real-time messaging
 
-### WebSocket Events
+### Voice
+- WebSocket `/webrtc` - WebRTC signaling
 
-**Client → Server:**
-- `authenticate` - Authenticate WebSocket connection
-- `message` - Send chat message
-- `typing` - Typing indicator
-- `voice_state` - Voice channel state change
-- `status_change` - Update user status
+---
 
-**Server → Client:**
-- `authenticated` - Authentication successful
-- `new_message` - New message received
-- `typing` - User is typing
-- `voice_state` - Voice state update
-- `user_status` - User status changed
+## 🔒 Privacy & Security
 
-## WebRTC Voice Chat
+- **No tracking** - We don't collect analytics
+- **No third-party services** - All data stays on your server
+- **End-to-end encryption** - Planned for future release
+- **Self-hostable** - You control everything
+- **Open source** - Audit the code anytime
 
-The voice chat uses WebRTC for peer-to-peer audio streaming:
+---
 
-1. Join a voice channel
-2. WebRTC signaling server coordinates connections
-3. Peers establish direct audio streams
-4. STUN servers help with NAT traversal
+## 🗺️ Roadmap
 
-**STUN Servers Used:**
-- stun:stun.l.google.com:19302
-- stun:stun1.l.google.com:19302
-
-For production, consider adding TURN servers for better connectivity behind strict firewalls.
-
-## Production Deployment
-
-### 1. Security Checklist
-
-- [ ] Change `JWT_SECRET` to a strong random string
-- [ ] Enable HTTPS/TLS encryption
-- [ ] Configure firewall rules
-- [ ] Set up rate limiting
-- [ ] Enable CORS only for your domain
-- [ ] Use environment variables for secrets
-- [ ] Implement backup strategy for MongoDB
-- [ ] Add monitoring and logging
-
-### 2. HTTPS Setup
-
-Use Let's Encrypt for free SSL certificates:
-
-```bash
-# Install certbot
-sudo apt-get install certbot
-
-# Get certificate
-sudo certbot certonly --standalone -d yourdomain.com
-
-# Update nginx.conf with SSL paths
-```
-
-### 3. Process Manager
-
-Use PM2 to keep the server running:
-
-```bash
-npm install -g pm2
-
-# Start application
-pm2 start server.js --name openchat
-
-# Auto-restart on reboot
-pm2 startup
-pm2 save
-```
-
-### 4. Database Backup
-
-```bash
-# Backup MongoDB
-mongodump --db openchat --out /backup/$(date +%Y%m%d)
-
-# Restore
-mongorestore --db openchat /backup/20240101/openchat
-```
-
-## Scaling Considerations
-
-### Horizontal Scaling
-
-For multiple server instances:
-
-1. **Use Redis for pub/sub** - Sync WebSocket messages across instances
-2. **Sticky sessions** - Route users to same server instance
-3. **Load balancer** - Nginx or HAProxy
-4. **Shared storage** - For file uploads (S3, MinIO)
-
-### Database Scaling
-
-- **MongoDB Replica Set** - High availability
-- **Sharding** - For very large datasets
-- **Connection pooling** - Optimize connections
-
-## Future Enhancements
-
-Planned features:
-
-- [ ] End-to-end encryption for messages
-- [ ] File sharing and attachments
-- [ ] Video chat support
+- [x] Text messaging
+- [x] Voice channels
+- [x] User authentication
+- [x] Server/channel structure
+- [ ] End-to-end encryption
+- [ ] File sharing
+- [ ] Video chat
 - [ ] Screen sharing
-- [ ] Bot API for integrations
-- [ ] Mobile apps (React Native)
+- [ ] Mobile apps
 - [ ] Message search
 - [ ] Emoji reactions
 - [ ] Thread replies
 - [ ] Role-based permissions
-- [ ] Server templates
-- [ ] Invite system
-
-## Privacy Features
-
-Unlike Discord, OpenChat:
-
-- ✅ No phone number verification
-- ✅ No government ID scanning
-- ✅ Minimal data collection
-- ✅ Self-hostable (full control)
-- ✅ Open source (audit the code)
-- ✅ No analytics tracking
-- ✅ Optional E2E encryption
-- ✅ Delete your data anytime
-
-## Contributing
-
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## Security
-
-Found a security issue? Please email security@openchat.example instead of creating a public issue.
-
-## License
-
-MIT License - See LICENSE file for details
-
-## Support
-
-- Documentation: [docs.openchat.example]
-- Community: [community.openchat.example]
-- Issues: [GitHub Issues]
-
-## Acknowledgments
-
-Built as a privacy-focused alternative for users concerned about invasive verification requirements.
+- [ ] Bot API
 
 ---
 
-**Note:** This is a functional prototype. For production use, additional security hardening, testing, and optimization are recommended.
+## 🤝 Contributing
+
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- Built in response to Discord's invasive ID verification requirements
+- Inspired by the need for privacy-focused communication tools
+- Thanks to all contributors and users who value digital privacy
+
+---
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/marar-jr/Dicsord--The-Discord-Alternative-/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/marar-jr/Dicsord--The-Discord-Alternative-/discussions)
+- **Twitter**: Share your thoughts with #Dicsord
+
+---
+
+## ⚠️ Disclaimer
+
+This is an independent project and is not affiliated with Discord Inc. in any way.
+
+---
+
+**Built with ❤️ for privacy**
+
+**A Foveated Production ⚡**

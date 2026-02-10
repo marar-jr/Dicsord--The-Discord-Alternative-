@@ -86,7 +86,7 @@ mongoose.connect(MONGODB_URI).then(() => {
     console.log('✓ Connected to MongoDB');
     
     // Start server AFTER MongoDB connects
-    server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
         console.log(`
 ╔════════════════════════════════════════╗
 ║  Dicsord Server Running                ║

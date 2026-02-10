@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenChat - Discord Alternative</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #36393f;
+            color: #dcddde;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Server List */
+        .server-list {
+            width: 72px;
+            background: #202225;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            gap: 8px;
+            overflow-y: auto;
+        }
+
+        .server-icon {
+            width: 48px;
+            height: 48px;
+            background: #36393f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .server-icon:hover {
+            border-radius: 16px;
+            background: #5865f2;
+        }
+
+        .server-icon.active {
+            border-radius: 16px;
+            background: #5865f2;
+        }
+
+        .server-icon.home {
+            background: #5865f2;
+        }
+
+        /* Channel List */
+        .channel-list {
+            width: 240px;
+            background: #2f3136;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .server-name {
+            padding: 16px;
+            border-bottom: 1px solid #202225;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .channels {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .channel-category {
+            margin-top: 16px;
+            margin-bottom: 4px;
+            padding: 0 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #96989d;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .channel-category:first-child {
+            margin-top: 8px;
+        }
+
+        .channel {
+            padding: 6px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #96989d;
+        }
+
+        .channel:hover {
+            background: #393c43;
+            color: #dcddde;
+        }
+
+        .channel.active {
+            background: #404249;
+            color: #fff;
+        }
+
+        .channel-icon {
+            font-size: 20px;
+        }
+
+        .user-area {
+            padding: 10px;
+            background: #292b2f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #5865f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .username {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-status {
+            font-size: 12px;
+            color: #96989d;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #36393f;
+        }
+
+        .chat-header {
+            height: 48px;
+            border-bottom: 1px solid #202225;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 8px;
+        }
+
+        .chat-header h3 {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 16px;
+            padding: 4px 0;
+        }
+
+        .message:hover {
+            background: #32353b;
+            margin: 0 -4px;
+            padding: 4px 4px;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #72767d;
+        }
+
+        .message-text {
+            color: #dcddde;
+            line-height: 1.375;
+        }
+
+        .message-input-area {
+            padding: 16px;
+        }
+
+        .message-input {
+            background: #40444b;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            width: 100%;
+            color: #dcddde;
+            font-size: 15px;
+        }
+
+        .message-input:focus {
+            outline: none;
+        }
+
+        /* Member List */
+        .member-list {
+            width: 240px;
+            background: #2f3136;
+            padding: 16px 8px;
+            overflow-y: auto;
+        }
+
+        .member-group {
+            margin-bottom: 16px;
+        }
+
+        .member-group-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #96989d;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            padding: 0 8px;
+        }
+
+        .member {
+            padding: 6px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .member:hover {
+            background: #393c43;
+        }
+
+        .member-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #43b581;
+            border: 2px solid #2f3136;
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+        }
+
+        .status-indicator.idle {
+            background: #faa61a;
+        }
+
+        .status-indicator.dnd {
+            background: #f04747;
+        }
+
+        .status-indicator.offline {
+            background: #747f8d;
+        }
+
+        .member-name {
+            font-size: 14px;
+        }
+
+        /* Voice Panel */
+        .voice-panel {
+            background: #292b2f;
+            border-top: 1px solid #202225;
+            padding: 12px;
+            display: none;
+        }
+
+        .voice-panel.active {
+            display: block;
+        }
+
+        .voice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .voice-channel-name {
+            font-weight: 600;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .voice-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .voice-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            background: #3ba55d;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            transition: background 0.2s;
+        }
+
+        .voice-btn:hover {
+            background: #2d7d46;
+        }
+
+        .voice-btn.muted {
+            background: #ed4245;
+        }
+
+        .voice-btn.disconnect {
+            background: #ed4245;
+        }
+
+        .voice-btn.disconnect:hover {
+            background: #c03537;
+        }
+
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .welcome-screen h2 {
+            font-size: 32px;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        .welcome-screen p {
+            color: #96989d;
+            margin-bottom: 24px;
+        }
+
+        .btn-primary {
+            background: #5865f2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #4752c4;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #202225;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #18191c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Server List -->
+        <div class="server-list">
+            <div class="server-icon home active" onclick="switchServer('home')">🏠</div>
+            <div class="server-icon" onclick="switchServer('gaming')">🎮</div>
+            <div class="server-icon" onclick="switchServer('study')">📚</div>
+            <div class="server-icon" onclick="switchServer('music')">🎵</div>
+        </div>
+
+        <!-- Channel List -->
+        <div class="channel-list">
+            <div class="server-name">
+                <span id="currentServerName">My Server</span>
+                <span>▼</span>
+            </div>
+            
+            <div class="channels">
+                <div class="channel-category">
+                    ▼ TEXT CHANNELS
+                </div>
+                <div class="channel active" onclick="switchChannel('general', 'text')">
+                    <span class="channel-icon">#</span>
+                    <span>general</span>
+                </div>
+                <div class="channel" onclick="switchChannel('random', 'text')">
+                    <span class="channel-icon">#</span>
+                    <span>random</span>
+                </div>
+                <div class="channel" onclick="switchChannel('announcements', 'text')">
+                    <span class="channel-icon">#</span>
+                    <span>announcements</span>
+                </div>
+
+                <div class="channel-category">
+                    ▼ VOICE CHANNELS
+                </div>
+                <div class="channel" onclick="switchChannel('General Voice', 'voice')">
+                    <span class="channel-icon">🔊</span>
+                    <span>General Voice</span>
+                </div>
+                <div class="channel" onclick="switchChannel('Gaming', 'voice')">
+                    <span class="channel-icon">🔊</span>
+                    <span>Gaming</span>
+                </div>
+                <div class="channel" onclick="switchChannel('Music', 'voice')">
+                    <span class="channel-icon">🔊</span>
+                    <span>Music</span>
+                </div>
+            </div>
+
+            <div class="voice-panel" id="voicePanel">
+                <div class="voice-header">
+                    <span class="voice-channel-name" id="voiceChannelName"></span>
+                </div>
+                <div class="voice-controls">
+                    <button class="voice-btn" id="muteBtn" onclick="toggleMute()">🎤</button>
+                    <button class="voice-btn" id="deafenBtn" onclick="toggleDeafen()">🔊</button>
+                    <button class="voice-btn disconnect" onclick="disconnectVoice()">📞</button>
+                </div>
+            </div>
+
+            <div class="user-area">
+                <div class="user-avatar">U</div>
+                <div class="user-info">
+                    <div class="username">User#1234</div>
+                    <div class="user-status">Online</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <span class="channel-icon">#</span>
+                <h3 id="channelName">general</h3>
+            </div>
+
+            <div class="messages" id="messagesContainer">
+                <div class="message">
+                    <div class="message-avatar">A</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">Admin</span>
+                            <span class="message-time">Today at 12:00 PM</span>
+                        </div>
+                        <div class="message-text">Welcome to OpenChat! A privacy-focused Discord alternative. No ID verification required! 🎉</div>
+                    </div>
+                </div>
+                <div class="message">
+                    <div class="message-avatar">S</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-author">System</span>
+                            <span class="message-time">Today at 12:01 PM</span>
+                        </div>
+                        <div class="message-text">This is a demo app. In production, you'd integrate WebRTC for voice/video, WebSockets for real-time chat, and end-to-end encryption for privacy.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message-input-area">
+                <input 
+                    type="text" 
+                    class="message-input" 
+                    id="messageInput"
+                    placeholder="Message #general"
+                    onkeypress="handleMessageInput(event)"
+                >
+            </div>
+        </div>
+
+        <!-- Member List -->
+        <div class="member-list">
+            <div class="member-group">
+                <div class="member-group-title">ONLINE — 4</div>
+                <div class="member">
+                    <div class="member-avatar">
+                        A
+                        <div class="status-indicator"></div>
+                    </div>
+                    <span class="member-name">Admin</span>
+                </div>
+                <div class="member">
+                    <div class="member-avatar">
+                        U
+                        <div class="status-indicator"></div>
+                    </div>
+                    <span class="member-name">User#1234</span>
+                </div>
+                <div class="member">
+                    <div class="member-avatar">
+                        M
+                        <div class="status-indicator idle"></div>
+                    </div>
+                    <span class="member-name">Moderator</span>
+                </div>
+                <div class="member">
+                    <div class="member-avatar">
+                        G
+                        <div class="status-indicator dnd"></div>
+                    </div>
+                    <span class="member-name">Guest</span>
+                </div>
+            </div>
+            <div class="member-group">
+                <div class="member-group-title">OFFLINE — 2</div>
+                <div class="member">
+                    <div class="member-avatar">
+                        B
+                        <div class="status-indicator offline"></div>
+                    </div>
+                    <span class="member-name">Bot</span>
+                </div>
+                <div class="member">
+                    <div class="member-avatar">
+                        P
+                        <div class="status-indicator offline"></div>
+                    </div>
+                    <span class="member-name">Player</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isMuted = false;
+        let isDeafened = false;
+        let currentChannel = 'general';
+        let isInVoice = false;
+
+        function switchChannel(channelName, type) {
+            // Update active channel styling
+            document.querySelectorAll('.channel').forEach(ch => ch.classList.remove('active'));
+            event.target.closest('.channel').classList.add('active');
+            
+            currentChannel = channelName;
+            document.getElementById('channelName').textContent = channelName;
+            
+            if (type === 'voice') {
+                connectToVoice(channelName);
+            } else {
+                // Update placeholder
+                document.getElementById('messageInput').placeholder = `Message #${channelName}`;
+            }
+        }
+
+        function connectToVoice(channelName) {
+            isInVoice = true;
+            const voicePanel = document.getElementById('voicePanel');
+            voicePanel.classList.add('active');
+            document.getElementById('voiceChannelName').textContent = channelName;
+            
+            addSystemMessage(`Connected to voice channel: ${channelName}`);
+        }
+
+        function disconnectVoice() {
+            isInVoice = false;
+            const voicePanel = document.getElementById('voicePanel');
+            voicePanel.classList.remove('active');
+            isMuted = false;
+            isDeafened = false;
+            document.getElementById('muteBtn').classList.remove('muted');
+            document.getElementById('deafenBtn').classList.remove('muted');
+            
+            addSystemMessage('Disconnected from voice channel');
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('muteBtn');
+            if (isMuted) {
+                btn.classList.add('muted');
+                btn.textContent = '🎤❌';
+            } else {
+                btn.classList.remove('muted');
+                btn.textContent = '🎤';
+            }
+        }
+
+        function toggleDeafen() {
+            isDeafened = !isDeafened;
+            const btn = document.getElementById('deafenBtn');
+            if (isDeafened) {
+                btn.classList.add('muted');
+                btn.textContent = '🔇';
+                // Auto mute when deafened
+                if (!isMuted) toggleMute();
+            } else {
+                btn.classList.remove('muted');
+                btn.textContent = '🔊';
+            }
+        }
+
+        function switchServer(serverName) {
+            document.querySelectorAll('.server-icon').forEach(s => s.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const serverNames = {
+                'home': 'My Server',
+                'gaming': 'Gaming Squad',
+                'study': 'Study Group',
+                'music': 'Music Lounge'
+            };
+            
+            document.getElementById('currentServerName').textContent = serverNames[serverName];
+        }
+
+        function handleMessageInput(event) {
+            if (event.key === 'Enter' && event.target.value.trim()) {
+                sendMessage(event.target.value);
+                event.target.value = '';
+            }
+        }
+
+        function sendMessage(text) {
+            const messagesContainer = document.getElementById('messagesContainer');
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">U</div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">User#1234</span>
+                        <span class="message-time">Today at ${timeString}</span>
+                    </div>
+                    <div class="message-text">${escapeHtml(text)}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function addSystemMessage(text) {
+            const messagesContainer = document.getElementById('messagesContainer');
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">S</div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">System</span>
+                        <span class="message-time">Today at ${timeString}</span>
+                    </div>
+                    <div class="message-text">${escapeHtml(text)}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Focus message input on load
+        window.addEventListener('load', () => {
+            document.getElementById('messageInput').focus();
+        });
+    </script>
+</body>
+</html>

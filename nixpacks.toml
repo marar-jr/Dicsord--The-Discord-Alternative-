@@ -7,5 +7,4 @@ cmds = ['npm ci']
 [start]
 cmd = 'node server-integrated.js'
 
-[variables]
-NODE_ENV = 'production'
+
